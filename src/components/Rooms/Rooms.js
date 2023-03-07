@@ -1,43 +1,40 @@
-import { fetchAllRooms, fetchVacantRooms } from './RoomService';
+import { fetchAllRooms } from './RoomService';
 import { useEffect, useState } from 'react';
-import Room from './Room';
-
+import { Box, Tab, Tabs } from '@mui/material';
+import SearchableRooms from './SearchableRooms';
+import TabPanel from './util/TabPanel';
 
 export default function Rooms() {
-    async function loadVacantRooms() {
-        setRooms(await fetchVacantRooms());
-    }
+  async function loadAllRooms() {
+    const newRooms = await fetchAllRooms();
+    setVacantRooms(newRooms.filter(room => room.roomStatus === true));
+    setOccupiedRooms(newRooms.filter(room => room.roomStatus === false));
+  }
+  const [vacantRooms, setVacantRooms] = useState([]);
+  const [occupiedRooms, setOccupiedRooms] = useState([]);
 
-    async function loadAllRooms() {
-        setRooms(await fetchAllRooms());
-    }
+  const [tabValue, setTabValue] = useState(0);
+  const handleTabChange = (event, newTabValue) => {
+    setTabValue(newTabValue);
+  };
 
-    /**
-     * Returns html to list all rooms of a specific roomStatus
-     *
-     * @param {boolean} roomStatus The status of the rooms to list
-     */
-    function listRooms(roomStatus) {
-        return (
-            <ul>
-                {rooms.filter(room => room.roomStatus == roomStatus).map(room => <Room room={room} />)}
-            </ul>
-        );
-    }
+  useEffect(() => {loadAllRooms()}, []);
 
-    const [rooms, setRooms] = useState([]);
+  return (
+    <div>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={tabValue} onChange={handleTabChange} >
+          <Tab label="Vacant" />
+          <Tab label="Occupied" />
+        </Tabs>
+      </Box>
 
-    useEffect(() => {loadAllRooms()}, []);
-
-    return (
-        <div>
-            <div id='vacant'>
-                {listRooms(true)}
-            </div>
-            
-            <div id='occupied'>
-                {listRooms(false)}
-            </div>
-        </div>
-    );
+      <TabPanel value={tabValue} index={0}>
+        <SearchableRooms rooms={vacantRooms} />
+      </TabPanel>
+      <TabPanel value={tabValue} index={1}>
+        <SearchableRooms rooms={occupiedRooms} />
+      </TabPanel>
+    </div>
+  );
 }

@@ -2,12 +2,10 @@
 import Rooms from './components/Rooms/Rooms';
 
 
-function App() {
+export default function App() {
   return (
     <div className="App">
       <Rooms />
     </div>
   );
 }
-
-export default App;

@@ -1,10 +1,10 @@
-export default function Room(room) {
-    room = room.room
-    console.log(room.roomId);
+import { ListItem, ListItemText } from "@mui/material"
+
+
+export default function Room({room}) {
     return (
-        <li key={room.roomId}>
-            {room.roomId}: {room.roomStatus ? 'vacant' : 'occupied'}
-        </li>
+          <ListItem>
+            <ListItemText primary={room.roomId} />
+          </ListItem>
     );
 }
-
