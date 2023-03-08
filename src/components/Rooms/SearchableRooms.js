@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import Room from './Room';
-import { List } from '@mui/material';
-import SearchBar from 'material-ui-search-bar';
+import { List, TextField } from '@mui/material';
 
 
 export default function SearchableRooms({rooms}) {
   const [filteredRooms, setFilteredRooms] = useState(rooms);
   const [prevRooms, setPrevRooms] = useState(null);
-  const [value, setValue] = useState('');
 
   if (rooms !== prevRooms) {
     if(prevRooms !== null)
@@ -15,20 +13,21 @@ export default function SearchableRooms({rooms}) {
     setPrevRooms(rooms);
   }
   
-  const handleInputChange = (inputValue) => {
+  const handleInputChange = (event) => {
+    const inputValue = event.target.value;
     const filtered = rooms.filter((item) =>
       item.roomId.toLowerCase().includes(inputValue.toLowerCase())
     );
     setFilteredRooms(filtered);
-    setValue(inputValue);
   };
 
   return (
     <div>
-      <SearchBar
-        value={value}
+      <TextField
+        label="Search"
+        variant="outlined"
         onChange={handleInputChange}
-        onCancelSearch={() => handleInputChange('')}
+        size='small'
       />
       <List dense={true}>
         {filteredRooms.map((room) => (

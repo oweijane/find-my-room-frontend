@@ -1,4 +1,3 @@
-// import './App.css';
 import Rooms from './components/Rooms/Rooms';
 
 
